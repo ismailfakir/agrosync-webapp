@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import MessageIcon from '@mui/icons-material/Message';
 import { type MqttMessage } from "../../types";
+import { SensorDataViewer } from "../SensorDataViewer";
 
 interface Props {
   messages: MqttMessage[];
@@ -21,6 +22,10 @@ const MqttMessageList: React.FC<Props> = ({ messages }) => {
     );
   }
 
+  const sensoreData = function processJson(msg:string){
+    return JSON.parse(msg)
+  }
+
   return (
     <List dense sx={{ maxHeight: 250, overflow: "auto" }}>
       {messages.map((msg, index) => (
@@ -28,10 +33,7 @@ const MqttMessageList: React.FC<Props> = ({ messages }) => {
           <ListItemIcon>
             <MessageIcon color="primary" />
           </ListItemIcon>
-          <ListItemText
-            primary={msg.payload}
-            secondary={`${msg.topic} • ${msg.time}`}
-          />
+          <SensorDataViewer data={sensoreData(msg.payload)}/>
         </ListItem>
       ))}
     </List>

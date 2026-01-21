@@ -19,8 +19,8 @@ const MqttConsole: React.FC = () => {
   const [status, setStatus] = useState<MqttStatus>("Disconnected");
   const [messages, setMessages] = useState<MqttMessage[]>([]);
 
-  const [subTopic, setSubTopic] = useState("agrosync/sensoreData");
-  const [pubTopic, setPubTopic] = useState("agrosync/sensoreData");
+  const [subTopic, setSubTopic] = useState("/agrosync/sensordata");
+  const [pubTopic, setPubTopic] = useState("/agrosync/sensordata");
   const [payload, setPayload] = useState("");
   const [qos, setQos] = useState<QoS>(1);
 
