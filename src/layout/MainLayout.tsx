@@ -13,11 +13,15 @@ import {
   Menu,
   MenuItem,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
 } from "@mui/material";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import MenuIcon from "@mui/icons-material/Menu";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import MailIcon from "@mui/icons-material/Mail";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import ListItemButton from "@mui/material/ListItemButton";
 
 const drawerWidth = 220;
 
@@ -26,12 +30,14 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  //const isMobile = true;
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const handleDrawerToggle = () => setMobileOpen(prev => !prev);
-  const handleMenuOpen = (e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget);
+  const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
+  const handleMenuOpen = (e: React.MouseEvent<HTMLElement>) =>
+    setAnchorEl(e.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
 
   const handleLogout = () => {
@@ -41,16 +47,38 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   };
 
   const drawer = (
-    <List>
-      <ListItem component={Link} to="/dashboard" onClick={() => setMobileOpen(false)}>
-        <ListItemText primary="Dashboard" />
-      </ListItem>
-      {user?.role === "admin" && (
-        <ListItem component={Link} to="/admin" onClick={() => setMobileOpen(false)}>
-          <ListItemText primary="Admin" />
+    <Box sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+      <List>
+        <ListItem
+          component={Link}
+          to="/dashboard"
+          onClick={() => setMobileOpen(false)}
+          disablePadding
+        >
+          <ListItemButton>
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText primary="Dashboard" />
+          </ListItemButton>
         </ListItem>
-      )}
-    </List>
+        {user?.role === "admin" && (
+          <ListItem
+            component={Link}
+            to="/admin"
+            onClick={() => setMobileOpen(false)}
+            disablePadding
+          >
+            <ListItemButton>
+              <ListItemIcon>
+                <MailIcon />
+              </ListItemIcon>
+              <ListItemText primary="Admin" />
+            </ListItemButton>
+          </ListItem>
+        )}
+      </List>
+    </Box>
   );
 
   return (
@@ -58,7 +86,12 @@ export default function MainLayout({ children }: { children: ReactNode }) {
       <AppBar position="fixed" sx={{ zIndex: theme.zIndex.drawer + 1 }}>
         <Toolbar>
           {isMobile && (
-            <IconButton color="inherit" edge="start" onClick={handleDrawerToggle} sx={{ mr: 2 }}>
+            <IconButton
+              color="inherit"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2 }}
+            >
               <MenuIcon />
             </IconButton>
           )}
@@ -70,7 +103,11 @@ export default function MainLayout({ children }: { children: ReactNode }) {
               <IconButton color="inherit" onClick={handleMenuOpen}>
                 <Avatar>{user.email.charAt(0).toUpperCase()}</Avatar>
               </IconButton>
-              <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+              >
                 <MenuItem disabled>{user.email}</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
@@ -79,13 +116,19 @@ export default function MainLayout({ children }: { children: ReactNode }) {
         </Toolbar>
       </AppBar>
 
-      <Box component="nav" sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}>
+      <Box
+        component="nav"
+        sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
+      >
         <Drawer
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{ keepMounted: true }}
-          sx={{ display: { xs: "block", md: "none" }, "& .MuiDrawer-paper": { width: drawerWidth } }}
+          sx={{
+            display: { xs: "block", md: "none" },
+            "& .MuiDrawer-paper": { width: drawerWidth },
+          }}
         >
           <Toolbar />
           {drawer}
@@ -94,7 +137,10 @@ export default function MainLayout({ children }: { children: ReactNode }) {
         <Drawer
           variant="permanent"
           open
-          sx={{ display: { xs: "none", md: "block" }, "& .MuiDrawer-paper": { width: drawerWidth } }}
+          sx={{
+            display: { xs: "none", md: "block" },
+            "& .MuiDrawer-paper": { width: drawerWidth },
+          }}
         >
           <Toolbar />
           {drawer}
@@ -107,7 +153,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
           flexGrow: 1,
           p: 3,
           width: { md: `calc(100% - ${drawerWidth}px)` },
-          pb: 8
+          pb: 8,
         }}
       >
         <Toolbar />
@@ -124,7 +170,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
             borderTop: "1px solid",
             borderColor: "divider",
             bgcolor: "background.paper",
-            zIndex: theme.zIndex.drawer - 1
+            zIndex: theme.zIndex.drawer - 1,
           }}
         >
           <Typography variant="body2">
