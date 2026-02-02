@@ -1,8 +1,16 @@
 import { useState } from "react";
-import { Box, Button, TextField, Typography, Paper, Alert } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Paper,
+  Alert,
+} from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { loginRequest } from "../api/auth";
-import { useAuth } from "../auth/AuthContext";
+import { loginUser } from "../api/auth";
+import { type User, useAuth } from "../auth/AuthContext";
+import { type UserLoginRequest, type UserLoginResponse } from "../types";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -19,8 +27,22 @@ export default function Login() {
 
     try {
       setLoading(true);
-      const res = await loginRequest(email, password);
-      login(res.data.user);
+      const loginUserData: UserLoginRequest = {
+        email: email,
+        password: password,
+      };
+      const res: UserLoginResponse = await loginUser(loginUserData);
+      console.log(res);
+      // Save token
+      localStorage.setItem("token", res.token);
+
+      // Optional: save user info
+      localStorage.setItem("user", JSON.stringify(res.user));
+      const u: User = {
+        email: res.user.email,
+        role: "user",
+      };
+      login(u);
       navigate("/dashboard");
     } catch (err: any) {
       setError(err?.response?.data?.message || "Invalid email or password");
@@ -36,7 +58,7 @@ export default function Login() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        bgcolor: "background.default"
+        bgcolor: "background.default",
       }}
     >
       <Paper elevation={3} sx={{ p: 4, width: 360 }}>
@@ -44,7 +66,11 @@ export default function Login() {
           Sign In
         </Typography>
 
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
 
         <Box component="form" onSubmit={handleSubmit}>
           <TextField

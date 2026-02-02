@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState } from "react";
 
 type Role = "user" | "admin";
 
-type User = {
+export type User = {
   email: string;
   role: Role;
 };

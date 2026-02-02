@@ -2,16 +2,25 @@
 // src/pages/Register.tsx
 // =====================
 import { useState } from "react";
-import { Box, Button, TextField, Typography, Paper, Alert } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Paper,
+  Alert,
+} from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
-import { registerRequest } from "../api/auth";
+import { registerUser } from "../api/auth";
+import { type RegisterUserRequest, type RegisterUserResponse } from "../types";
 
 export default function Register() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState("test@test.com");
+  const [password, setPassword] = useState("1234567");
+  const [name, setName] = useState("test islam");
+  const [confirmPassword, setConfirmPassword] = useState("1234567");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -26,7 +35,17 @@ export default function Register() {
 
     try {
       setLoading(true);
-      await registerRequest(email, password);
+      const registerUserData:RegisterUserRequest = {
+        name: name,
+        email: email,
+        password: password
+      }
+      const data:RegisterUserResponse = await registerUser(registerUserData);
+      // Save token
+      localStorage.setItem("token", data.token);
+
+      // Optional: save user info
+      localStorage.setItem("user", JSON.stringify(data.user));
       navigate("/login");
     } catch (err: any) {
       setError(err?.response?.data?.message || "Registration failed");
@@ -42,7 +61,7 @@ export default function Register() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        bgcolor: "background.default"
+        bgcolor: "background.default",
       }}
     >
       <Paper elevation={3} sx={{ p: 4, width: 360 }}>
@@ -50,9 +69,22 @@ export default function Register() {
           Create Account
         </Typography>
 
-        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
 
         <Box component="form" onSubmit={handleSubmit}>
+          <TextField
+            label="Name"
+            type="text"
+            fullWidth
+            margin="normal"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           <TextField
             label="Email"
             type="email"
