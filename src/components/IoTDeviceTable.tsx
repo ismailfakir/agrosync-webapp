@@ -100,7 +100,7 @@ const IoTDeviceTable: React.FC<IoTDeviceTableProps> = ({
   return (
     <Card>
       <CardHeader
-        title="IoT Devices"
+        title="IoT Devices Status"
         action={
           onRefresh && (
             <Tooltip title="Refresh">

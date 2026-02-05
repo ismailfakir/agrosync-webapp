@@ -1,5 +1,11 @@
 import React from "react";
-import axios from "axios";
+import { saveIotDevice } from "../api/auth";
+import {
+  type SaveIoTDeviceRequest,
+  type SaveIoTDeviceResponse,
+} from "../types";
+import { useGlobalAlert } from "../components/GlobalAlertProvider";
+
 import {
   Card,
   CardHeader,
@@ -10,19 +16,11 @@ import {
 } from "@mui/material";
 
 /**
- * IoT Device payload
- */
-export interface IoTDevicePayload {
-  name: string;
-  deviceId: string;
-  location?: string;
-}
-
-/**
  * API helper
  */
-async function saveIoTDevice(payload: IoTDevicePayload): Promise<void> {
-  await axios.post("/api/iot/devices", payload);
+async function saveDevice(payload: SaveIoTDeviceRequest): Promise<void> {
+  const res: SaveIoTDeviceResponse = await saveIotDevice(payload);
+  console.log(res);
 }
 
 interface IoTDeviceSaveCardProps {
@@ -30,27 +28,39 @@ interface IoTDeviceSaveCardProps {
 }
 
 const IoTDeviceSaveCard: React.FC<IoTDeviceSaveCardProps> = ({ onSaved }) => {
-  const [form, setForm] = React.useState<IoTDevicePayload>({
+  const { showAlert } = useGlobalAlert();
+  const [form, setForm] = React.useState<SaveIoTDeviceRequest>({
     name: "",
-    deviceId: "",
+    type: "",
     location: "",
   });
   const [loading, setLoading] = React.useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async () => {
-    if (!form.name || !form.deviceId) return;
+    if (!form.name || !form.type || !form.location) return;
 
     setLoading(true);
     try {
-      await saveIoTDevice(form);
-      setForm({ name: "", deviceId: "", location: "" });
+      await saveDevice(form);
+      showAlert({
+        severity: "success",
+        message: "new Iot Device created",
+        autoHideDuration: 6000,
+      });
+      setForm({ name: "", type: "", location: "" });
       onSaved?.();
+    } catch (e: any) {
+      showAlert({
+        severity: "error",
+        message: "failed to save device, cause: "+e.message,
+        autoHideDuration: 6000,
+      });
     } finally {
       setLoading(false);
     }
@@ -70,9 +80,9 @@ const IoTDeviceSaveCard: React.FC<IoTDeviceSaveCardProps> = ({ onSaved }) => {
             required
           />
           <TextField
-            label="Device ID"
-            name="deviceId"
-            value={form.deviceId}
+            label="Device Type"
+            name="type"
+            value={form.type}
             onChange={handleChange}
             fullWidth
             required
@@ -83,11 +93,12 @@ const IoTDeviceSaveCard: React.FC<IoTDeviceSaveCardProps> = ({ onSaved }) => {
             value={form.location}
             onChange={handleChange}
             fullWidth
+            required
           />
 
           <Button
             variant="contained"
-            disabled={loading || !form.name || !form.deviceId}
+            disabled={loading || !form.name || !form.type}
             onClick={handleSubmit}
           >
             Save Device

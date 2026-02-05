@@ -51,3 +51,47 @@ export interface UserLoginResponse {
     roles: string[];
   };
 } */
+
+// =====================
+// DEVICE TYPES
+// =====================
+
+export interface SaveIoTDeviceRequest {
+  name: string;
+  location: string;
+  type: string;
+}
+
+export interface SaveIoTDeviceResponse {
+  _id: string;
+  __v: number;
+  name: string;
+  location: string;
+  type: string;
+  status: string;
+  owner: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type IoTDeviceOwner = {
+  _id: string;
+  name: string;
+  email: string;
+};
+
+export type IoTDevice = {
+  _id: string;
+  __v: number;
+  name: string;
+  location: string;
+  type: string;
+  status: string;
+  owner: IoTDeviceOwner;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type IoTDeviceListResponse = {
+  devices: IoTDevice[];
+};

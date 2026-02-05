@@ -41,6 +41,8 @@ export default function MainLayout({ children }: { children: ReactNode }) {
   const handleMenuClose = () => setAnchorEl(null);
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     logout();
     handleMenuClose();
     navigate("/login");

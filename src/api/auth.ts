@@ -1,5 +1,5 @@
 import axios from "axios";
-import { type RegisterUserRequest, type RegisterUserResponse, type UserLoginRequest, type UserLoginResponse } from "../types";
+import { type RegisterUserRequest, type RegisterUserResponse, type UserLoginRequest, type UserLoginResponse,type SaveIoTDeviceRequest,type SaveIoTDeviceResponse, type IoTDeviceListResponse } from "../types";
 
 export const api = axios.create({
   baseURL: "http://localhost:3000/api",
@@ -39,6 +39,25 @@ export const loginUser = async (
   userData: UserLoginRequest
 ): Promise<UserLoginResponse> => {
   const response = await api.post<UserLoginResponse>("/auth/login", userData);
+
+  return response.data;
+};
+
+// =====================
+// DEVICES
+// =====================
+export const saveIotDevice = async (
+  deviceData: SaveIoTDeviceRequest
+): Promise<SaveIoTDeviceResponse> => {
+  const response = await api.post<SaveIoTDeviceResponse>("/devices", deviceData);
+  console.log(response.data);
+
+  return response.data;
+};
+
+export const listIotDevices = async (): Promise<IoTDeviceListResponse> => {
+  const response = await api.get<IoTDeviceListResponse>("/devices");
+  console.log(response.data);
 
   return response.data;
 };

@@ -16,8 +16,8 @@ export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [email, setEmail] = useState("admin@test.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("admin@agrosync.com");
+  const [password, setPassword] = useState("Admin123!");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -38,9 +38,10 @@ export default function Login() {
 
       // Optional: save user info
       localStorage.setItem("user", JSON.stringify(res.user));
+      const role = res.user.roles.includes("admin") ? "admin" : "user"
       const u: User = {
         email: res.user.email,
-        role: "user",
+        role: role,
       };
       login(u);
       navigate("/dashboard");

@@ -1,4 +1,9 @@
+import React, { useEffect, useState } from 'react';
+import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+import Tab from "@mui/material/Tab";
 import Stack from "@mui/material/Stack";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -10,6 +15,8 @@ import IoTDeviceCommandCard from "../components/IoTDeviceCommandCard";
 import IoTDeviceSaveCard from "../components/IoTDeviceSaveCard";
 import IoTDeviceTable from "../components/IoTDeviceTable";
 import { useGlobalAlert } from "../components/GlobalAlertProvider";
+import { listIotDevices } from "../api/auth";
+import { type IoTDeviceListResponse } from "../types";
 /**
  * Command enum
  */
@@ -29,14 +36,21 @@ export interface IoTDevice {
   status: DeviceStatus;
 }
 export default function Dashboard() {
+  
+  const user = localStorage.getItem("user");
   const { showAlert } = useGlobalAlert();
-  const refetchDevices = () => {};
-  const fetchDevices = () => {
-    showAlert({
-      severity: "error",
-      message: "Failed to connect to device",
+  
+  const refetchDevices = () => {
+    //listIotDevices()
+  };
+  const fetchDevices = async () => {
+     const res: IoTDeviceListResponse = await listIotDevices();
+    
+    /* showAlert({
+      severity: "success",
+      message: "devices: "+res,
       autoHideDuration: 6000,
-    });
+    }); */
   };
   const editDevice = () => {
     showAlert({
@@ -75,34 +89,46 @@ export default function Dashboard() {
       <Typography variant="h3" gutterBottom>
         User Dashboard
       </Typography>
-      <IoTDeviceTable
-        devices={devices1}
-        onRefresh={() => fetchDevices()}
-        onEdit={() => editDevice()}
-        onDelete={() => deleteDevice()}
-        onControl={() => controllDevice()}
-        onRowClick={() => rowClick()}
-      />
+
+      <Grid container spacing={2}>
+        <Grid size={6}>
+          <IoTDeviceCommandCard
+            devices={[
+              {
+                id: "lamp-001",
+                name: "Living Room Lamp",
+                state: DeviceCommand.ON,
+              },
+              {
+                id: "lamp-002",
+                name: "Bedroom Lamp",
+                state: DeviceCommand.OFF,
+              },
+            ]}
+          />
+        </Grid>
+        <Grid size={6}>
+          <IoTDeviceSaveCard onSaved={() => refetchDevices()} />
+        </Grid>
+        <Grid size={12}>
+          <IoTDeviceTable
+            devices={devices1}
+            onRefresh={() => fetchDevices()}
+            onEdit={() => editDevice()}
+            onDelete={() => deleteDevice()}
+            onControl={() => controllDevice()}
+            onRowClick={() => rowClick()}
+          />
+        </Grid>
+      </Grid>
+
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={{ xs: 1, sm: 2, md: 4 }}
       >
-        <IoTDeviceSaveCard onSaved={() => refetchDevices()} />
-
-        <IoTDeviceCommandCard
-          devices={[
-            {
-              id: "lamp-001",
-              name: "Living Room Lamp",
-              state: DeviceCommand.ON,
-            },
-            {
-              id: "lamp-002",
-              name: "Bedroom Lamp",
-              state: DeviceCommand.OFF,
-            },
-          ]}
-        />
+        <Typography variant="h6" gutterBottom>
+          {user}
+        </Typography>
       </Stack>
     </Box>
   );
