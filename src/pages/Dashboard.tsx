@@ -1,22 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import Tab from "@mui/material/Tab";
 import Stack from "@mui/material/Stack";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import IoTDeviceCommandCard from "../components/IoTDeviceCommandCard";
 import IoTDeviceSaveCard from "../components/IoTDeviceSaveCard";
 import IoTDeviceTable from "../components/IoTDeviceTable";
 import { useGlobalAlert } from "../components/GlobalAlertProvider";
 import { listIotDevices } from "../api/auth";
-import { type IoTDeviceListResponse } from "../types";
+import { type IoTDevice } from "../types";
 /**
  * Command enum
  */
@@ -28,23 +20,53 @@ export enum DeviceStatus {
   ONLINE = "ONLINE",
   OFFLINE = "OFFLINE",
 }
-export interface IoTDevice {
+/* export interface IoTDevice {
   id: string;
   name: string;
   deviceId: string;
   location?: string;
   status: DeviceStatus;
-}
+} */
 export default function Dashboard() {
+
+  const [devices, setDevices] = useState<IoTDevice[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   const user = localStorage.getItem("user");
   const { showAlert } = useGlobalAlert();
+
+  useEffect(() => {
+    const fetchIotDevices = async () => {
+      try {
+        const response = await listIotDevices();
+        
+        setDevices(response);
+        setError(null);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchIotDevices();
+  }, []);
   
-  const refetchDevices = () => {
-    //listIotDevices()
+  const refetchDevices = async () => {
+    try {
+        const response = await listIotDevices();
+        
+        setDevices(response);
+        setError(null);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
   };
   const fetchDevices = async () => {
-     const res: IoTDeviceListResponse = await listIotDevices();
+     //const res: IoTDeviceListResponse = await listIotDevices();
     
     /* showAlert({
       severity: "success",
@@ -61,29 +83,7 @@ export default function Dashboard() {
   const deleteDevice = () => {};
   const controllDevice = () => {};
   const rowClick = () => {};
-  const devices1 = [
-    {
-      id: "lamp-001",
-      name: "Living Room Lamp",
-      deviceId: "1001",
-      location: "home",
-      status: DeviceStatus.OFFLINE,
-    },
-    {
-      id: "lamp-002",
-      name: "Outside Lamp",
-      deviceId: "1002",
-      location: "home",
-      status: DeviceStatus.ONLINE,
-    },
-    {
-      id: "lamp-003",
-      name: "Bed Room Lamp",
-      deviceId: "1003",
-      location: "home",
-      status: DeviceStatus.OFFLINE,
-    },
-  ];
+  
   return (
     <Box sx={{ width: "100%" }}>
       <Typography variant="h3" gutterBottom>
@@ -93,18 +93,7 @@ export default function Dashboard() {
       <Grid container spacing={2}>
         <Grid size={6}>
           <IoTDeviceCommandCard
-            devices={[
-              {
-                id: "lamp-001",
-                name: "Living Room Lamp",
-                state: DeviceCommand.ON,
-              },
-              {
-                id: "lamp-002",
-                name: "Bedroom Lamp",
-                state: DeviceCommand.OFF,
-              },
-            ]}
+            devices={devices}
           />
         </Grid>
         <Grid size={6}>
@@ -112,7 +101,7 @@ export default function Dashboard() {
         </Grid>
         <Grid size={12}>
           <IoTDeviceTable
-            devices={devices1}
+            devices={devices}
             onRefresh={() => fetchDevices()}
             onEdit={() => editDevice()}
             onDelete={() => deleteDevice()}

@@ -22,6 +22,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PowerIcon from "@mui/icons-material/Power";
+import { type IoTDevice } from "../types";
 
 /**
  * Device status enum
@@ -34,13 +35,13 @@ export enum DeviceStatus {
 /**
  * IoT Device model
  */
-export interface IoTDevice {
+/* export interface IoTDevice {
   id: string;
   name: string;
   deviceId: string;
   location?: string;
   status: DeviceStatus;
-}
+} */
 
 interface IoTDeviceTableProps {
   devices: IoTDevice[];
@@ -78,8 +79,10 @@ const IoTDeviceTable: React.FC<IoTDeviceTableProps> = ({
     setOrderBy(property);
   };
 
+  console.log(devices);
+
   const filtered = devices.filter((d) =>
-    [d.name, d.deviceId, d.location]
+    [d.name, d._id, d.location]
       .filter(Boolean)
       .some((v) => v!.toLowerCase().includes(search.toLowerCase()))
   );
@@ -164,13 +167,13 @@ const IoTDeviceTable: React.FC<IoTDeviceTableProps> = ({
                 {!loading &&
                   paged.map((device) => (
                     <TableRow
-                      key={device.id}
+                      key={device._id}
                       hover
                       sx={{ cursor: onRowClick ? "pointer" : "default" }}
                       onClick={() => onRowClick?.(device)}
                     >
                       <TableCell>{device.name}</TableCell>
-                      <TableCell>{device.deviceId}</TableCell>
+                      <TableCell>{device._id}</TableCell>
                       <TableCell>{device.location || "—"}</TableCell>
                       <TableCell>
                         <Chip
@@ -228,10 +231,3 @@ const IoTDeviceTable: React.FC<IoTDeviceTableProps> = ({
 };
 
 export default IoTDeviceTable;
-
-/**
- * Notes:
- * - Live status updates should update `devices` prop from parent (WebSocket / polling)
- * - Row click navigates to details page
- * - Skeleton shown when loading=true
- */

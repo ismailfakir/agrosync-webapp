@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-//import { type DeviceCommand } from "../types";
+import { type IoTDevice } from "../types";
 import {
   Card,
   CardContent,
@@ -26,18 +26,18 @@ export enum DeviceCommand {
 /**
  * Device model (includes current state)
  */
-export interface IoTDevice {
+/* export interface IoTDevice {
   id: string;
   name: string;
   state: DeviceCommand; // current device state
-}
+} */
 
 /**
  * API helper
  */
 async function sendDeviceCommand(
   deviceId: string,
-  command: DeviceCommand
+  command: DeviceCommand,
 ): Promise<void> {
   await axios.post("/api/iot/command", {
     deviceId,
@@ -54,15 +54,24 @@ const IoTDeviceCommandCard: React.FC<IoTDeviceCommandCardProps> = ({
 }) => {
   const [selectedDeviceId, setSelectedDeviceId] = React.useState<string>("");
   const [currentState, setCurrentState] = React.useState<DeviceCommand | null>(
-    null
+    null,
   );
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
+  const getState = function (status: string) {
+  if (status === "offline") {
+    return DeviceCommand.OFF;
+  } else {
+    return DeviceCommand.ON;
+  }
+}
+
   // Sync state when device selection changes
   React.useEffect(() => {
-    const device = devices.find((d) => d.id === selectedDeviceId);
-    setCurrentState(device?.state ?? null);
+    const device:IoTDevice = devices.find((d) => d._id === selectedDeviceId);
+    console.log(device)
+    setCurrentState(getState("offline")); //TODO fix
   }, [selectedDeviceId, devices]);
 
   const handleSend = async (command: DeviceCommand) => {
@@ -77,8 +86,8 @@ const IoTDeviceCommandCard: React.FC<IoTDeviceCommandCardProps> = ({
       await sendDeviceCommand(selectedDeviceId, command);
     } catch (err) {
       // rollback on failure
-      const device = devices.find((d) => d.id === selectedDeviceId);
-      setCurrentState(device?.state ?? null);
+      const device:IoTDevice = devices.find((d) => d._id === selectedDeviceId);
+      setCurrentState(getState("offline")); //TODO fix
 
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.message || err.message);
@@ -104,7 +113,7 @@ const IoTDeviceCommandCard: React.FC<IoTDeviceCommandCardProps> = ({
               onChange={(e) => setSelectedDeviceId(e.target.value)}
             >
               {devices.map((device) => (
-                <MenuItem key={device.id} value={device.id}>
+                <MenuItem key={device._id} value={device._id}>
                   {device.name}
                 </MenuItem>
               ))}

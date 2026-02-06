@@ -58,7 +58,6 @@ export const saveIotDevice = async (
 export const listIotDevices = async (): Promise<IoTDeviceListResponse> => {
   const response = await api.get<IoTDeviceListResponse>("/devices");
   console.log(response.data);
-
   return response.data;
 };
 
