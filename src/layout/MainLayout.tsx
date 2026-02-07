@@ -18,14 +18,19 @@ import {
 import ListItemIcon from "@mui/material/ListItemIcon";
 import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import SensorsIcon from '@mui/icons-material/Sensors';
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import ListItemButton from "@mui/material/ListItemButton";
+import Divider from "@mui/material/Divider";
+import HomeIcon from '@mui/icons-material/Home';
+import PeopleIcon from '@mui/icons-material/People';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 const drawerWidth = 220;
 
 export default function MainLayout({ children }: { children: ReactNode }) {
+
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -59,9 +64,23 @@ export default function MainLayout({ children }: { children: ReactNode }) {
         >
           <ListItemButton>
             <ListItemIcon>
-              <InboxIcon />
+              <HomeIcon />
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
+          </ListItemButton>
+        </ListItem>
+        <Divider />
+        <ListItem
+          component={Link}
+          to="/devices"
+          onClick={() => setMobileOpen(false)}
+          disablePadding
+        >
+          <ListItemButton>
+            <ListItemIcon>
+              <SensorsIcon />
+            </ListItemIcon>
+            <ListItemText primary="Devices" />
           </ListItemButton>
         </ListItem>
         {user?.role === "admin" && (
@@ -73,9 +92,24 @@ export default function MainLayout({ children }: { children: ReactNode }) {
           >
             <ListItemButton>
               <ListItemIcon>
-                <MailIcon />
+                <AdminPanelSettingsIcon />
               </ListItemIcon>
               <ListItemText primary="Admin" />
+            </ListItemButton>
+          </ListItem>
+        )}
+        {user?.role === "admin" && (
+          <ListItem
+            component={Link}
+            to="/users"
+            onClick={() => setMobileOpen(false)}
+            disablePadding
+          >
+            <ListItemButton>
+              <ListItemIcon>
+                <PeopleIcon />
+              </ListItemIcon>
+              <ListItemText primary="Users" />
             </ListItemButton>
           </ListItem>
         )}

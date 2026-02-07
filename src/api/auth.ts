@@ -1,5 +1,16 @@
 import axios from "axios";
-import { type RegisterUserRequest, type RegisterUserResponse, type UserLoginRequest, type UserLoginResponse,type SaveIoTDeviceRequest,type SaveIoTDeviceResponse, type IoTDeviceListResponse } from "../types";
+import {
+  type RegisterUserRequest,
+  type RegisterUserResponse,
+  type UserLoginRequest,
+  type UserLoginResponse,
+  type SaveIoTDeviceRequest,
+  type SaveIoTDeviceResponse,
+  type IoTDeviceListResponse,
+  type UserListResponse,
+  type IoTDeviceCommandRequest,
+  type IoTDeviceCommandResponse,
+} from "../types";
 
 export const api = axios.create({
   baseURL: "http://localhost:3000/api",
@@ -17,7 +28,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-
 export const loginRequest = (email: string, password: string) =>
   api.post("/auth/login", { email, password });
 
@@ -28,17 +38,27 @@ export const loginRequest = (email: string, password: string) =>
 ) => api.post("/auth/register", { email, password, name }); */
 
 export const registerUser = async (
-  userData: RegisterUserRequest
+  userData: RegisterUserRequest,
 ): Promise<RegisterUserResponse> => {
-  const response = await api.post<RegisterUserResponse>("/auth/register", userData);
+  const response = await api.post<RegisterUserResponse>(
+    "/auth/register",
+    userData,
+  );
 
   return response.data;
 };
 
 export const loginUser = async (
-  userData: UserLoginRequest
+  userData: UserLoginRequest,
 ): Promise<UserLoginResponse> => {
   const response = await api.post<UserLoginResponse>("/auth/login", userData);
+
+  return response.data;
+};
+
+export const fetchUsers = async (): Promise<UserListResponse> => {
+  const response = await api.get<UserListResponse>("/users");
+  console.log(response.data);
 
   return response.data;
 };
@@ -47,9 +67,12 @@ export const loginUser = async (
 // DEVICES
 // =====================
 export const saveIotDevice = async (
-  deviceData: SaveIoTDeviceRequest
+  deviceData: SaveIoTDeviceRequest,
 ): Promise<SaveIoTDeviceResponse> => {
-  const response = await api.post<SaveIoTDeviceResponse>("/devices", deviceData);
+  const response = await api.post<SaveIoTDeviceResponse>(
+    "/devices",
+    deviceData,
+  );
   console.log(response.data);
 
   return response.data;
@@ -57,6 +80,17 @@ export const saveIotDevice = async (
 
 export const listIotDevices = async (): Promise<IoTDeviceListResponse> => {
   const response = await api.get<IoTDeviceListResponse>("/devices");
+  console.log(response.data);
+  return response.data;
+};
+
+export const sendIotDeviceCommand = async (
+  commandData: IoTDeviceCommandRequest,
+): Promise<IoTDeviceCommandResponse> => {
+  const response = await api.post<IoTDeviceCommandResponse>(
+    "/devices/command",
+    commandData,
+  );
   console.log(response.data);
   return response.data;
 };

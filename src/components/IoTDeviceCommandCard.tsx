@@ -24,15 +24,6 @@ export enum DeviceCommand {
 }
 
 /**
- * Device model (includes current state)
- */
-/* export interface IoTDevice {
-  id: string;
-  name: string;
-  state: DeviceCommand; // current device state
-} */
-
-/**
  * API helper
  */
 async function sendDeviceCommand(
@@ -59,11 +50,14 @@ const IoTDeviceCommandCard: React.FC<IoTDeviceCommandCardProps> = ({
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  const getState = function (status: string) {
-  if (status === "offline") {
-    return DeviceCommand.OFF;
-  } else {
+  const getState = function (device:IoTDevice) {
+
+  if (device === undefined) {
+    return null;
+  } else if(device.status === "online"){
     return DeviceCommand.ON;
+  }else if(device.status === "offline"){
+    return DeviceCommand.OFF;
   }
 }
 
@@ -71,7 +65,7 @@ const IoTDeviceCommandCard: React.FC<IoTDeviceCommandCardProps> = ({
   React.useEffect(() => {
     const device:IoTDevice = devices.find((d) => d._id === selectedDeviceId);
     console.log(device)
-    setCurrentState(getState("offline")); //TODO fix
+    setCurrentState(getState(device)); //TODO fix
   }, [selectedDeviceId, devices]);
 
   const handleSend = async (command: DeviceCommand) => {
@@ -87,7 +81,7 @@ const IoTDeviceCommandCard: React.FC<IoTDeviceCommandCardProps> = ({
     } catch (err) {
       // rollback on failure
       const device:IoTDevice = devices.find((d) => d._id === selectedDeviceId);
-      setCurrentState(getState("offline")); //TODO fix
+      setCurrentState(getState(device)); //TODO fix
 
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.message || err.message);

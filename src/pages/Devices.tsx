@@ -1,34 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
-import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
-import IoTDeviceCommandCard from "../components/IoTDeviceCommandCard";
-import IoTDeviceSaveCard from "../components/IoTDeviceSaveCard";
 import IoTDeviceTable from "../components/IoTDeviceTable";
 import { useGlobalAlert } from "../components/GlobalAlertProvider";
 import { listIotDevices } from "../api/auth";
 import { type IoTDevice } from "../types";
-/**
- * Command enum
- */
-export enum DeviceCommand {
-  ON = "ON",
-  OFF = "OFF",
-}
-export enum DeviceStatus {
-  ONLINE = "ONLINE",
-  OFFLINE = "OFFLINE",
-}
-/* export interface IoTDevice {
-  id: string;
-  name: string;
-  deviceId: string;
-  location?: string;
-  status: DeviceStatus;
-} */
-export default function Dashboard() {
+
+export default function Devices() {
   const [devices, setDevices] = useState<IoTDevice[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -93,16 +72,10 @@ export default function Dashboard() {
   return (
     <Box sx={{ width: "100%" }}>
       <Typography variant="h3" gutterBottom>
-        User Dashboard
+        User Devices
       </Typography>
 
       <Grid container spacing={2}>
-        <Grid size={6}>
-          <IoTDeviceCommandCard devices={devices} />
-        </Grid>
-        <Grid size={6}>
-          <IoTDeviceSaveCard onSaved={() => refetchDevices()} />
-        </Grid>
         <Grid size={12}>
           <IoTDeviceTable
             devices={devices}
@@ -114,15 +87,6 @@ export default function Dashboard() {
           />
         </Grid>
       </Grid>
-
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        spacing={{ xs: 1, sm: 2, md: 4 }}
-      >
-        <Stack direction="row" spacing={1}>
-          <Chip label={user} color="primary" variant="outlined" />
-        </Stack>
-      </Stack>
     </Box>
   );
 }

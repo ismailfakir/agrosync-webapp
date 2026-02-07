@@ -21,9 +21,24 @@ export interface User {
   name: string;
   roles: string[];
 }
+export interface RoleBackend {
+  _id: number;
+  name: string;
+  __v: number;
+  permissions:string[];
+  updatedAt: Date;
+}
+export interface UserBackend {
+  _id: number;
+  email: string;
+  name: string;
+  roles: RoleBackend[];
+  __v: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
 export interface UserListResponse {
-  users: User[];
-  total: number;
+  users: UserBackend[];
 }
 export interface RegisterUserRequest {
   name: string;
@@ -94,4 +109,16 @@ export type IoTDevice = {
 
 export type IoTDeviceListResponse = {
   devices: IoTDevice[];
+};
+
+export type IoTDeviceCommandRequest = {
+  commandId: string;
+  deviceId: string;
+  command: string;
+};
+
+export type IoTDeviceCommandResponse = {
+  commandId: string;
+  deviceId: string;
+  commandResponse: string;
 };

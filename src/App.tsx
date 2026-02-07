@@ -11,6 +11,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
+import Users from "./pages/Users";
+import Devices from "./pages/Devices";
 import MainLayout from "./layout/MainLayout";
 
 function App() {
@@ -52,11 +54,33 @@ function App() {
         />
 
         <Route
+          path="/devices"
+          element={
+            <AdminRoute>
+              <MainLayout>
+                <Devices />
+              </MainLayout>
+            </AdminRoute>
+          }
+        />
+
+        <Route
           path="/admin"
           element={
             <AdminRoute>
               <MainLayout>
                 <Admin />
+              </MainLayout>
+            </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/users"
+          element={
+            <AdminRoute>
+              <MainLayout>
+                <Users />
               </MainLayout>
             </AdminRoute>
           }
