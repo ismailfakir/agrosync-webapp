@@ -8,7 +8,7 @@ import IoTDeviceCommandCard from "../components/IoTDeviceCommandCard";
 import IoTDeviceSaveCard from "../components/IoTDeviceSaveCard";
 import IoTDeviceTable from "../components/IoTDeviceTable";
 import { useGlobalAlert } from "../components/GlobalAlertProvider";
-import { listIotDevices } from "../api/auth";
+import { listIotDevices, sendIotDeviceCommand } from "../api/auth";
 import { type IoTDevice } from "../types";
 /**
  * Command enum
@@ -21,13 +21,7 @@ export enum DeviceStatus {
   ONLINE = "ONLINE",
   OFFLINE = "OFFLINE",
 }
-/* export interface IoTDevice {
-  id: string;
-  name: string;
-  deviceId: string;
-  location?: string;
-  status: DeviceStatus;
-} */
+
 export default function Dashboard() {
   const [devices, setDevices] = useState<IoTDevice[]>([]);
   const [loading, setLoading] = useState(true);

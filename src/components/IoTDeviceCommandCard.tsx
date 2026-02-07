@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
-import { type IoTDevice } from "../types";
+import {v4 as uuidv4} from 'uuid';
+import { type IoTDevice,type IoTDeviceCommandRequest } from "../types";
+import { sendIotDeviceCommand } from "../api/auth";
 import {
   Card,
   CardContent,
@@ -30,10 +32,16 @@ async function sendDeviceCommand(
   deviceId: string,
   command: DeviceCommand,
 ): Promise<void> {
-  await axios.post("/api/iot/command", {
-    deviceId,
-    command,
-  });
+
+  const uuId = uuidv4();
+
+  const commandData: IoTDeviceCommandRequest = {
+    deviceId: deviceId,
+    commandId: uuId,
+    command:command
+  }
+
+  sendIotDeviceCommand(commandData);
 }
 
 interface IoTDeviceCommandCardProps {
@@ -137,10 +145,3 @@ const IoTDeviceCommandCard: React.FC<IoTDeviceCommandCardProps> = ({
 };
 
 export default IoTDeviceCommandCard;
-
-/**
- * Expected usage:
- * devices must include current state from backend
- *
- * [{ id: "lamp-1", name: "Lamp", state: DeviceCommand.OFF }]
- */

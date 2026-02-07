@@ -14,13 +14,14 @@ export const SensorDataViewer: React.FC<SensorDataViewerProps> = ({ data, title 
         <h3 className="mb-2 font-semibold text-sm text-gray-700">{title}</h3>
       )}
 
-      <Stack direction="row" spacing={1} sx={{ alignItems: 'right' }}>
+      {/* <Stack direction="row" spacing={1} sx={{ alignItems: 'right' }}>
         <Chip label={"Time: "+data.updated_at} color="primary" variant="outlined"/>
         <Chip label={"Device Name: "+data.device_name} color="primary" variant="outlined"/>
         <Chip label={"Temperature: "+data.temperature} color="success" variant="outlined"/>
         <Chip label={"Humidity: "+data.humidity} color="primary" variant="outlined"/>
         
-      </Stack>
+      </Stack> */}
+      <Chip label={JSON.stringify(data)} color="primary" variant="outlined"/>
     </Stack>
   );
 };
