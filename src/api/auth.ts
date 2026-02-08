@@ -87,6 +87,7 @@ export const listIotDevices = async (): Promise<IoTDeviceListResponse> => {
 export const sendIotDeviceCommand = async (
   commandData: IoTDeviceCommandRequest,
 ): Promise<IoTDeviceCommandResponse> => {
+   console.log(commandData);
   const response = await api.post<IoTDeviceCommandResponse>(
     "/devices/command",
     commandData,

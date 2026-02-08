@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import IoTDeviceTable from "../components/IoTDeviceTable";
 import { useGlobalAlert } from "../components/GlobalAlertProvider";
+import { LoadingIndicator } from "../components/LoadingIndicator";
 import { listIotDevices } from "../api/auth";
 import { type IoTDevice } from "../types";
 
@@ -15,17 +16,19 @@ export default function Devices() {
   const user = localStorage.getItem("user");
   const { showAlert } = useGlobalAlert();
 
-  const notYetImplemented= async () =>{
+  const notYetImplemented = async () => {
+    
     showAlert({
       severity: "error",
       message: "operation not yet implemented",
       autoHideDuration: 2000,
     });
-
-  }
+  };
 
   useEffect(() => {
     const fetchIotDevices = async () => {
+      setLoading(true);
+      
       try {
         const response = await listIotDevices();
 
@@ -74,6 +77,8 @@ export default function Devices() {
       <Typography variant="h3" gutterBottom>
         User Devices
       </Typography>
+
+      {loading && <LoadingIndicator message="Fetching data from server…" />}
 
       <Grid container spacing={2}>
         <Grid size={12}>

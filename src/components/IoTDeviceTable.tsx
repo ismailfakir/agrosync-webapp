@@ -32,17 +32,6 @@ export enum DeviceStatus {
   OFFLINE = "OFFLINE",
 }
 
-/**
- * IoT Device model
- */
-/* export interface IoTDevice {
-  id: string;
-  name: string;
-  deviceId: string;
-  location?: string;
-  status: DeviceStatus;
-} */
-
 interface IoTDeviceTableProps {
   devices: IoTDevice[];
   loading?: boolean;

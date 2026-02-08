@@ -6,7 +6,7 @@ import { GlobalAlertProvider } from "./components/GlobalAlertProvider";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <GlobalAlertProvider stackDirection="up">
+    <GlobalAlertProvider stackDirection="down">
       <App />
     </GlobalAlertProvider>
   </StrictMode>,
