@@ -2,7 +2,6 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText,
   Typography,
 } from "@mui/material";
 import MessageIcon from '@mui/icons-material/Message';

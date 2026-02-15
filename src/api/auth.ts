@@ -6,14 +6,19 @@ import {
   type UserLoginResponse,
   type SaveIoTDeviceRequest,
   type SaveIoTDeviceResponse,
-  type IoTDeviceListResponse,
-  type UserListResponse,
+  type IoTDevice,
+  type UserBackend,
   type IoTDeviceCommandRequest,
   type IoTDeviceCommandResponse,
 } from "../types";
 
+//VITE_BACKEND_API_URL
+const BACKEND_API_URL = import.meta.env.VITE_BACKEND_API_URL as string;
+console.log("api call: {}",BACKEND_API_URL);
+
 export const api = axios.create({
-  baseURL: "http://localhost:3000/api",
+  //baseURL: "http://localhost:3000/api",
+  baseURL: BACKEND_API_URL,
   //withCredentials: true,
 });
 
@@ -56,8 +61,8 @@ export const loginUser = async (
   return response.data;
 };
 
-export const fetchUsers = async (): Promise<UserListResponse> => {
-  const response = await api.get<UserListResponse>("/users");
+export const fetchUsers = async (): Promise<UserBackend[]> => {
+  const response = await api.get<UserBackend[]>("/users");
   console.log(response.data);
 
   return response.data;
@@ -78,8 +83,8 @@ export const saveIotDevice = async (
   return response.data;
 };
 
-export const listIotDevices = async (): Promise<IoTDeviceListResponse> => {
-  const response = await api.get<IoTDeviceListResponse>("/devices");
+export const listIotDevices = async (): Promise<IoTDevice[]> => {
+  const response = await api.get<IoTDevice[]>("/devices");
   console.log(response.data);
   return response.data;
 };

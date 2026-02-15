@@ -27,10 +27,12 @@ import { type IoTDevice } from "../types";
 /**
  * Device status enum
  */
-export enum DeviceStatus {
-  ONLINE = "ONLINE",
-  OFFLINE = "OFFLINE",
-}
+const DeviceStatus = {
+  ONLINE: "ONLINE",
+  OFFLINE: "OFFLINE",
+} as const;
+
+export type DeviceStatus = (typeof DeviceStatus)[keyof typeof DeviceStatus];
 
 interface IoTDeviceTableProps {
   devices: IoTDevice[];
@@ -42,10 +44,18 @@ interface IoTDeviceTableProps {
   onRowClick?: (device: IoTDevice) => void;
 }
 
-const statusColorMap: Record<DeviceStatus, "success" | "default"> = {
-  [DeviceStatus.ONLINE]: "success",
-  [DeviceStatus.OFFLINE]: "default",
-};
+/* const statusColorMap: {[key:string]:string} = {
+  ONLINE: "success",
+  OFFLINE: "default",
+}; */
+
+const statusColorMap = (k: string) =>{
+  if(k==="ONLINE"){
+    return "success";
+  } else {
+    return "default";
+  }
+}
 
 const IoTDeviceTable: React.FC<IoTDeviceTableProps> = ({
   devices,
@@ -59,7 +69,7 @@ const IoTDeviceTable: React.FC<IoTDeviceTableProps> = ({
   const [orderBy, setOrderBy] = React.useState<keyof IoTDevice>("name");
   const [order, setOrder] = React.useState<"asc" | "desc">("asc");
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [search, setSearch] = React.useState("");
 
   const handleSort = (property: keyof IoTDevice) => {
@@ -73,7 +83,7 @@ const IoTDeviceTable: React.FC<IoTDeviceTableProps> = ({
   const filtered = devices.filter((d) =>
     [d.name, d._id, d.location]
       .filter(Boolean)
-      .some((v) => v!.toLowerCase().includes(search.toLowerCase()))
+      .some((v) => v!.toLowerCase().includes(search.toLowerCase())),
   );
 
   const sorted = [...filtered].sort((a, b) => {
@@ -86,7 +96,7 @@ const IoTDeviceTable: React.FC<IoTDeviceTableProps> = ({
 
   const paged = sorted.slice(
     page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
+    page * rowsPerPage + rowsPerPage,
   );
 
   return (
@@ -167,12 +177,19 @@ const IoTDeviceTable: React.FC<IoTDeviceTableProps> = ({
                       <TableCell>
                         <Chip
                           label={device.status}
-                          color={statusColorMap[device.status]}
+                          color={statusColorMap(device.status)}
                           size="small"
                         />
                       </TableCell>
-                      <TableCell align="right" onClick={(e) => e.stopPropagation()}>
-                        <Stack direction="row" spacing={1} justifyContent="flex-end">
+                      <TableCell
+                        align="right"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          justifyContent="flex-end"
+                        >
                           {onControl && (
                             <Tooltip title="Control">
                               <IconButton onClick={() => onControl(device)}>

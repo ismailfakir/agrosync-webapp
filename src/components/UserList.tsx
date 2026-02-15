@@ -1,15 +1,14 @@
 //https://medium.com/@ignatovich.dm/creating-a-type-safe-api-client-with-typescript-and-react-ce1b82bf8b9b
-import React, { useEffect, useState } from 'react';
-import { type UserBackend, type UserListResponse } from "../types";
+import React, { useEffect, useState } from "react";
+import { type UserBackend } from "../types";
 import { fetchUsers } from "../api/auth";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
 const UserList: React.FC = () => {
   const [users, setUsers] = useState<UserBackend[]>([]);
@@ -19,10 +18,10 @@ const UserList: React.FC = () => {
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const response: UserListResponse = await fetchUsers();
+        const response = await fetchUsers();
         setUsers(response);
-      } catch (err) {
-        setError('Failed to fetch users.');
+      } catch (err: any) {
+        setError("Failed to fetch users.");
       } finally {
         setLoading(false);
       }
@@ -49,14 +48,16 @@ const UserList: React.FC = () => {
           {users.map((row) => (
             <TableRow
               key={row._id}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">
                 {row._id}
               </TableCell>
               <TableCell align="right">{row.name}</TableCell>
               <TableCell align="right">{row.email}</TableCell>
-              <TableCell align="right">{row.roles.map(r =>r.name).concat()}</TableCell>
+              <TableCell align="right">
+                {row.roles.map((r) => r.name).concat()}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

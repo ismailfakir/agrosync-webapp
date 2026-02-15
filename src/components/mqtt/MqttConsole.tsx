@@ -60,7 +60,9 @@ const MqttConsole: React.FC = () => {
       );
     });
 
-    return () => client.end(true);
+    return () => {
+      client.end(true);
+    };
   }, []);
 
   return (

@@ -20,10 +20,12 @@ import {
 /**
  * Command enum
  */
-export enum DeviceCommand {
-  ON = "ON",
-  OFF = "OFF",
-}
+const DeviceCommand = {
+  ON:"ON",
+  OFF:"OFF",
+} as const;
+
+export type DeviceCommand = typeof DeviceCommand[keyof typeof DeviceCommand];
 
 /**
  * API helper
@@ -71,9 +73,9 @@ const IoTDeviceCommandCard: React.FC<IoTDeviceCommandCardProps> = ({
 
   // Sync state when device selection changes
   React.useEffect(() => {
-    const device:IoTDevice = devices.find((d) => d._id === selectedDeviceId);
+    const device = devices.find((d) => d._id === selectedDeviceId) as IoTDevice;
     console.log(device)
-    setCurrentState(getState(device)); //TODO fix
+    setCurrentState(getState(device) as DeviceCommand); //TODO fix
   }, [selectedDeviceId, devices]);
 
   const handleSend = async (command: DeviceCommand) => {
@@ -88,8 +90,8 @@ const IoTDeviceCommandCard: React.FC<IoTDeviceCommandCardProps> = ({
       await sendDeviceCommand(selectedDeviceId, command);
     } catch (err) {
       // rollback on failure
-      const device:IoTDevice = devices.find((d) => d._id === selectedDeviceId);
-      setCurrentState(getState(device)); //TODO fix
+      const device = devices.find((d) => d._id === selectedDeviceId) as IoTDevice;
+      setCurrentState(getState(device)as DeviceCommand); //TODO fix
 
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.message || err.message);

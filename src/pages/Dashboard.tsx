@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
@@ -8,24 +8,31 @@ import IoTDeviceCommandCard from "../components/IoTDeviceCommandCard";
 import IoTDeviceSaveCard from "../components/IoTDeviceSaveCard";
 import IoTDeviceTable from "../components/IoTDeviceTable";
 import { useGlobalAlert } from "../components/GlobalAlertProvider";
-import { listIotDevices, sendIotDeviceCommand } from "../api/auth";
+import { listIotDevices } from "../api/auth";
 import { type IoTDevice } from "../types";
+/**
+ * device status
+ */
+const DeviceStatus ={
+  ONLINE :"ONLINE",
+  OFFLINE : "OFFLINE",
+}as const;
+export type DeviceStatus = typeof DeviceCommand[keyof typeof DeviceCommand];
+
 /**
  * Command enum
  */
-export enum DeviceCommand {
-  ON = "ON",
-  OFF = "OFF",
-}
-export enum DeviceStatus {
-  ONLINE = "ONLINE",
-  OFFLINE = "OFFLINE",
-}
+const DeviceCommand = {
+  ON:"ON",
+  OFF:"OFF",
+} as const;
+
+export type DeviceCommand = typeof DeviceCommand[keyof typeof DeviceCommand];
 
 export default function Dashboard() {
   const [devices, setDevices] = useState<IoTDevice[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const user = localStorage.getItem("user");
   const { showAlert } = useGlobalAlert();
@@ -46,7 +53,7 @@ export default function Dashboard() {
 
         setDevices(response);
         setError(null);
-      } catch (err) {
+      } catch (err:any) {
         setError(err);
       } finally {
         setLoading(false);
@@ -62,7 +69,7 @@ export default function Dashboard() {
 
       setDevices(response);
       setError(null);
-    } catch (err) {
+    } catch (err: any) {
       setError(err);
     } finally {
       setLoading(false);
@@ -83,6 +90,9 @@ export default function Dashboard() {
   const rowClick = () => {
     notYetImplemented();
   };
+
+  if (loading) return <div>Loading users...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <Box sx={{ width: "100%" }}>

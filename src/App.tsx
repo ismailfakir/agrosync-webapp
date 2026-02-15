@@ -1,7 +1,4 @@
-import { useEffect, useState } from "react";
-import Stack from "@mui/material/Stack";
 import "./App.css";
-import MqttConsole from "./components/mqtt/MqttConsole";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./auth/AuthContext";
 import { ProtectedRoute } from "./auth/ProtectedRoute";
@@ -48,6 +45,17 @@ function App() {
             <ProtectedRoute>
               <MainLayout>
                 <Dashboard />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/devices"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <Devices />
               </MainLayout>
             </ProtectedRoute>
           }

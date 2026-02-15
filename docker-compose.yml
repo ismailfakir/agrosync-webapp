@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vite-frontend
+    ports:
+      - "8880:8880"
+    environment:
+      VITE_BACKEND_URL: ${VITE_BACKEND_URL}
+      VITE_MQTT_USER: ${VITE_MQTT_USER}
+      VITE_MQTT_PASSWORD: ${VITE_MQTT_PASSWORD}

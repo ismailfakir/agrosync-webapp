@@ -17,7 +17,6 @@ import {
 } from "@mui/material";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import MenuIcon from "@mui/icons-material/Menu";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import SensorsIcon from '@mui/icons-material/Sensors';
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";

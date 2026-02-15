@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import MqttConsole from "../components/mqtt/MqttConsole";
 export default function Admin() {

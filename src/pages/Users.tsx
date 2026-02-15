@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import UserList from "../components/UserList";
 export default function Users() {
