@@ -6,17 +6,18 @@ const env = loadEnv(
 );
 
 const PORT = +(env.VITE_APP_PORT as string); // + sign convert it to Number
-const API_URL = env.VVITE_BACKEND_API_URL as string;
+const API_URL = env.VITE_BACKEND_API_URL as string;
 
 // https://vite.dev/config/
 export default defineConfig({
   server: {
     port:PORT,
     host:'0.0.0.0',
+    allowedHosts: true,
     proxy: {
       '/api': {
-        //target: 'http://localhost:3000', // Backend server
-        target:  API_URL, // Backend server
+        target: 'http://localhost:3000', // Backend server
+        //target:  API_URL, // Backend server
         changeOrigin: true, // Ensure the request appears to come from the frontend server
         rewrite: (path) => path.replace(/^\/api/, ''), // Optional: Remove '/api' prefix
       },

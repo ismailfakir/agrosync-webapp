@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
+import NotificationToast from '../components/NotificationToast'
 import IoTDeviceCommandCard from "../components/IoTDeviceCommandCard";
 import IoTDeviceSaveCard from "../components/IoTDeviceSaveCard";
 import IoTDeviceTable from "../components/IoTDeviceTable";
@@ -33,6 +34,7 @@ export default function Dashboard() {
   const [devices, setDevices] = useState<IoTDevice[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const currentUserId = "agrpsync-socket-client"; // socket io client name
 
   const user = localStorage.getItem("user");
   const { showAlert } = useGlobalAlert();
@@ -99,6 +101,7 @@ export default function Dashboard() {
       <Typography variant="h3" gutterBottom>
         User Dashboard
       </Typography>
+      <NotificationToast userId={currentUserId} severity="success" />
 
       <Grid container spacing={2}>
         <Grid size={6}>

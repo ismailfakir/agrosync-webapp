@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 import { Snackbar, Alert, type AlertColor, Stack } from "@mui/material";
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Alert model
@@ -34,7 +35,7 @@ export const GlobalAlertProvider: React.FC<{
   const [alerts, setAlerts] = useState<GlobalAlert[]>([]);
 
   const showAlert = useCallback((alert: Omit<GlobalAlert, "id">) => {
-    setAlerts((prev) => [...prev, { id: crypto.randomUUID(), ...alert }]);
+    setAlerts((prev) => [...prev, { id: uuidv4(), ...alert }]);
   }, []);
 
   const handleClose = (id: string) => {

@@ -17,4 +17,10 @@ $ npm install
 $ npm run dev
 ```
 
+# run using pm2
+
+``` bash
+$ pm2 start "npm run dev" --name webapp
+```
+
 

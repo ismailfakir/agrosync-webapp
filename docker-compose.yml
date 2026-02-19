@@ -5,10 +5,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: vite-frontend
+    container_name: agrosync-webapp
     ports:
       - "8880:8880"
     environment:
-      VITE_BACKEND_URL: ${VITE_BACKEND_URL}
-      VITE_MQTT_USER: ${VITE_MQTT_USER}
+      VITE_APP_PORT: ${VITE_APP_PORT}
+      VITE_BACKEND_API_URL: ${VITE_BACKEND_API_URL}
+      VVITE_MQTT_USERNAME: ${VVITE_MQTT_USERNAME}
       VITE_MQTT_PASSWORD: ${VITE_MQTT_PASSWORD}

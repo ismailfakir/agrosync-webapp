@@ -122,3 +122,14 @@ export type IoTDeviceCommandResponse = {
   deviceId: string;
   commandResponse: string;
 };
+
+// =====================
+// SOCKET.IO
+// =====================
+export interface ServerToClientEvents {
+  notification: (data: { message: string; timestamp: Date }) => void;
+}
+
+export interface ClientToServerEvents {
+  join_room: (userId: string) => void;
+}
