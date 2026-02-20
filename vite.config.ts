@@ -16,8 +16,7 @@ export default defineConfig({
     allowedHosts: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000', // Backend server
-        //target:  API_URL, // Backend server
+        target:  API_URL, // Backend server
         changeOrigin: true, // Ensure the request appears to come from the frontend server
         rewrite: (path) => path.replace(/^\/api/, ''), // Optional: Remove '/api' prefix
       },
